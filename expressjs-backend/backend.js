@@ -62,14 +62,10 @@ app.post("/account/registration", async (req, res) => {
 
   if (validatePassword(userToAdd.password)) {
     if (!matchingUser.length) {
-      const user = await addUser({
-        userid: userToAdd.userid,
-        password: userToAdd.password,
-      });
+      const user = await addUser(userToAdd);
       const safeUser = {
-        userid: esapi.encoder().encodeForHtml(userToAdd.userid),
-        // not sure if we need to be sending back to pwd...
-        password: esapi.encoder().encodeForHtml(userToAdd.password),
+        userid: esapi.encoder().encodeForHtml(user.userid),
+        password: esapi.encoder().encodeForHtml(user.password),
       };
       res.status(201).send(safeUser);
     } else {

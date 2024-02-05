@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import https from "https";
 import fs from "fs";
+import esapi from "node-esapi";
 import {
   generateAccessToken,
   authenticateToken,
@@ -21,6 +22,7 @@ const port = process.env.PORT;
 
 app.use(express.json());
 app.use(cors());
+app.disable("x-powered-by");
 
 https
   .createServer(
@@ -64,7 +66,12 @@ app.post("/account/registration", async (req, res) => {
         userid: userToAdd.userid,
         password: userToAdd.password,
       });
-      res.status(201).send(user);
+      const safeUser = {
+        userid: esapi.encoder().encodeForHtml(userToAdd.userid),
+        // not sure if we need to be sending back to pwd...
+        password: esapi.encoder().encodeForHtml(userToAdd.password),
+      };
+      res.status(201).send(safeUser);
     } else {
       res.status(409).send("Conflicting username");
     }

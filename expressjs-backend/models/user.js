@@ -21,16 +21,21 @@ const UserSchema = new mongoose.Schema(
   { collection: "users_list" }
 );
 
-UserSchema.pre("save", function (next) {
+UserSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
-    bcrypt.genSalt(8, function (err, salt) {
-      if (err) return next(err);
-      bcrypt.hash("B4c0//", salt, function (err, hash) {
-        if (err) return next(err);
-        this.password = hash;
-        next();
-      });
-    });
+    let hashedPassword;
+
+    await bcrypt
+      .genSalt(10)
+      .then((salt) => {
+        return bcrypt.hash(this.password, salt);
+      })
+      .then((hash) => {
+        hashedPassword = hash;
+      })
+      .catch((err) => console.error(err.message));
+    this.password = hashedPassword;
+    next();
   }
 });
 
@@ -38,9 +43,8 @@ UserSchema.methods.comparePassword = async function (password) {
   if (!password) throw new Error("Password is missing");
 
   try {
-    bcrypt.compare("B4c0//", hash, function (err, result) {
-      return result;
-    });
+    const result = await bcrypt.compare(password, this.password);
+    return result;
   } catch (error) {
     console.log("Error while comparing password", error.message);
   }

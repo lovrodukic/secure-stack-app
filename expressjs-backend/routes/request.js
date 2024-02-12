@@ -60,8 +60,8 @@ router.post("/account/registration", async (req, res) => {
     if (!matchingUser.length) {
       const user = await addUser(userToAdd);
       const safeUser = {
-        userid: esapi.encoder().encodeForHtml(user.userid),
-        password: esapi.encoder().encodeForHtml(user.password),
+        userid: esapi.encoder().encodeForHTML(user.userid),
+        password: esapi.encoder().encodeForHTML(user.password),
       };
       res.status(201).send(safeUser);
     } else {

@@ -11,7 +11,7 @@ export const Home = () => {
     try {
       const user = { userid: username, password: password };
       const response = await axios.post(
-        "https://localhost:8000/account/login",
+        "https://localhost:8000/request/account/login",
         user
       );
       if (response.status === 200) auth.onLogin(response.data);
@@ -22,6 +22,19 @@ export const Home = () => {
       return false;
     }
   }
+
+  //   async function handleOauth() {
+  //     try {
+  //       const user = { userid: username, password: password };
+  //       const response = await axios.post("https://localhost:8000/request", user);
+  //       if (response.status === 200) auth.onLogin(response.data);
+
+  //       return response;
+  //     } catch (error) {
+  //       if (error.response.status === 401) alert("Oauth error");
+  //       return false;
+  //     }
+  //   }
 
   return (
     <>
@@ -51,6 +64,11 @@ export const Home = () => {
           Sign In
         </button>
       </div>
+      {/* <div>
+        <button type="button" onClick={handleOauth}>
+          Sign In Using Google
+        </button>
+      </div> */}
     </>
   );
 };

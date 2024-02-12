@@ -5,6 +5,10 @@ import { useAuth } from "../context/AuthProvider";
 export const Landing = () => {
   const { auth } = useAuth();
   const [users, setUsers] = useState([]);
+  const queryParameters = new URLSearchParams(window.location.search);
+  const google_token = queryParameters.get("access_token");
+
+  if (google_token) localStorage.setItem("access_token", google_token);
 
   useEffect(() => {
     async function getContacts() {
@@ -12,9 +16,12 @@ export const Landing = () => {
 
       if (cookie) {
         try {
-          const response = await axios.get("https://localhost:8000/users", {
-            headers: { authorization: `Bearer ${cookie}` },
-          });
+          const response = await axios.get(
+            "https://localhost:8000/request/users",
+            {
+              headers: { authorization: `Bearer ${cookie}` },
+            }
+          );
           if (response.status === 200) setUsers(response.data);
 
           return response;

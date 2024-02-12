@@ -10,7 +10,7 @@ export const Registration = () => {
     try {
       const user = { userid: username, password: password };
       const response = await axios.post(
-        "https://localhost:8000/account/registration",
+        "https://localhost:8000/request/account/registration",
         user
       );
       return response;

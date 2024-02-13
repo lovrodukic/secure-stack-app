@@ -1,11 +1,16 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 
 export const Home = () => {
   const { auth } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  useEffect(() => {
+    auth.getToken();
+    console.log(auth);
+  });
 
   async function handleLogin() {
     try {
@@ -23,18 +28,17 @@ export const Home = () => {
     }
   }
 
-  //   async function handleOauth() {
-  //     try {
-  //       const user = { userid: username, password: password };
-  //       const response = await axios.post("https://localhost:8000/request", user);
-  //       if (response.status === 200) auth.onLogin(response.data);
+  async function handleOauth() {
+    try {
+      const response = await axios.post("https://localhost:8000/request");
+      if (response.status === 200) window.location.href = response.data;
 
-  //       return response;
-  //     } catch (error) {
-  //       if (error.response.status === 401) alert("Oauth error");
-  //       return false;
-  //     }
-  //   }
+      return response;
+    } catch (error) {
+      if (error.response.status === 401) alert("Oauth error");
+      return false;
+    }
+  }
 
   return (
     <>
@@ -64,11 +68,11 @@ export const Home = () => {
           Sign In
         </button>
       </div>
-      {/* <div>
+      <div>
         <button type="button" onClick={handleOauth}>
-          Sign In Using Google
+          Sign in with Google
         </button>
-      </div> */}
+      </div>
     </>
   );
 };

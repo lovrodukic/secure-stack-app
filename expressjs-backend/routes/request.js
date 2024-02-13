@@ -16,13 +16,12 @@ const router = express.Router();
 
 dotenv.config({ path: "./config.env" });
 
+// oauth
 router.post("/", async function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "https://localhost:3000");
-
   res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-  const redirectUrl = "http://127.0.0.1:8000/oauth";
-
+  const redirectUrl = "https://localhost:8000/oauth";
   const oAuth2Client = new OAuth2Client(
     process.env.CLIENT_ID,
     process.env.CLIENT_SECRET,
@@ -35,7 +34,7 @@ router.post("/", async function (req, res, next) {
     prompt: "consent",
   });
 
-  res.json({ url: authorizeUrl });
+  res.json(authorizeUrl);
 });
 
 // authenticate user

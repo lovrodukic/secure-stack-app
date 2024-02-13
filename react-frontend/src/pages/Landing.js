@@ -6,13 +6,16 @@ export const Landing = () => {
   const { auth } = useAuth();
   const [users, setUsers] = useState([]);
   const queryParameters = new URLSearchParams(window.location.search);
-  const google_token = queryParameters.get("access_token");
+  const oauth_token = queryParameters.get("token");
 
-  if (google_token) localStorage.setItem("access_token", google_token);
+  if (oauth_token) auth.setOauthContext(oauth_token);
 
   useEffect(() => {
     async function getContacts() {
-      const cookie = document.cookie.split("=")[1];
+      const cookie = document.cookie
+        .split("; ")
+        .find((row) => row.startsWith("token="))
+        ?.split("=")[1];
 
       if (cookie) {
         try {

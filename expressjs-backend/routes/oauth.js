@@ -19,7 +19,7 @@ router.get("/", async function (req, res, next) {
   const code = req.query.code;
 
   try {
-    const redirectUrl = "https://127.0.0.1:8000/oauth";
+    const redirectUrl = "https://localhost:8000/oauth";
     const oAuth2Client = new OAuth2Client(
       process.env.CLIENT_ID,
       process.env.CLIENT_SECRET,
@@ -29,14 +29,15 @@ router.get("/", async function (req, res, next) {
     const result = await oAuth2Client.getToken(code);
     await oAuth2Client.setCredentials(result.tokens);
     const user = oAuth2Client.credentials;
+    console.log(user);
 
     await getUserData(user.access_token);
 
-    token = generateAccessToken(user.appUser.userid);
-    res.redirect(303, `http://localhost:3000/token=${token}`);
+    const token = generateAccessToken({ userid: user.id_token });
+    res.redirect(303, `https://localhost:3000/landing/token=${token}`);
   } catch (err) {
     console.log("Error with signin with Google", err);
-    res.redirect(303, "http://localhost:3000/");
+    res.redirect(303, "https://localhost:3000/");
   }
 });
 

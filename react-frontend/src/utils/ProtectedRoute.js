@@ -3,18 +3,12 @@ import { useAuth } from "../context/AuthProvider";
 
 export const ProtectedRoute = ({ children }) => {
   const { auth } = useAuth();
-  //   const token = document.cookie
-  //     .split("; ")
-  //     .find((row) => row.startsWith("oauth_token="))
-  //     ?.split("=")[1];
-  //   console.log(token);
-  console.log(auth);
+  const token = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("token="))
+    ?.split("=")[1];
 
-  //   if (!auth.token && !token) {
-  //     return <Navigate to="/home" replace />;
-  //   }
-
-  if (!auth.token || auth.token === "null") {
+  if ((!auth.token || auth.token === "null") && (!token || token === "null")) {
     return <Navigate to="/home" replace />;
   }
   return children;

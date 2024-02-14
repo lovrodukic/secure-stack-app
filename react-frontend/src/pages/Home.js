@@ -8,8 +8,7 @@ export const Home = () => {
   const [password, setPassword] = useState("");
 
   useEffect(() => {
-    auth.getToken();
-    console.log(auth);
+    auth.setAuthContext();
   });
 
   async function handleLogin() {

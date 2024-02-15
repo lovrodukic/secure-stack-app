@@ -29,7 +29,6 @@ router.get("/", async function (req, res, next) {
     const result = await oAuth2Client.getToken(code);
     await oAuth2Client.setCredentials(result.tokens);
     const user = oAuth2Client.credentials;
-
     await getUserData(user.access_token);
 
     const token = generateAccessToken({ userid: user.id_token });

@@ -19,10 +19,19 @@ export const AuthProvider = ({ children }) => {
     setToken(null);
   };
 
+  const setAuthContext = async () => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("token="))
+      ?.split("=")[1];
+    if (token) setToken(token);
+  };
+
   const auth = {
     token,
     onLogin: handleLogin,
     onLogout: handleLogout,
+    setAuthContext: setAuthContext,
   };
 
   return (

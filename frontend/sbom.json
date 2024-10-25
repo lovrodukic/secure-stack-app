@@ -58,10 +58,10 @@
     ],
     "component": {
       "type": "application",
-      "name": "react-frontend",
+      "name": "frontend",
       "version": "0.1.0",
-      "bom-ref": "react-frontend@0.1.0",
-      "purl": "pkg:npm/react-frontend@0.1.0",
+      "bom-ref": "frontend@0.1.0",
+      "purl": "pkg:npm/frontend@0.1.0",
       "properties": [
         {
           "name": "cdx:npm:package:path",
@@ -78205,7 +78205,7 @@
   ],
   "dependencies": [
     {
-      "ref": "react-frontend@0.1.0",
+      "ref": "frontend@0.1.0",
       "dependsOn": [
         "@babel/plugin-proposal-private-property-in-object@7.21.11",
         "@testing-library/jest-dom@5.17.0",

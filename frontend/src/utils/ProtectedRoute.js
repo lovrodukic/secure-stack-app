@@ -3,7 +3,12 @@ import { useAuth } from "../context/AuthProvider";
 
 export const ProtectedRoute = ({ children }) => {
   const { auth } = useAuth();
-  if (!auth.token) {
+  const token = document.cookie
+    .split("; ")
+    .find((row) => row.startsWith("token="))
+    ?.split("=")[1];
+
+  if ((!auth.token || auth.token === "null") && (!token || token === "null")) {
     return <Navigate to="/home" replace />;
   }
   return children;

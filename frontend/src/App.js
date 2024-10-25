@@ -44,7 +44,7 @@ const Navigation = () => {
       <Link to="/home">Home</Link>
       <Link to="/registration">Registration</Link>
       <Link to="/landing">Landing</Link>
-      {auth.token && (
+      {auth.token && auth.token !== "null" && (
         <button type="button" onClick={auth.onLogout}>
           Sign Out
         </button>

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../context/AuthProvider";
 
 export const Home = () => {
@@ -7,11 +7,15 @@ export const Home = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
+  useEffect(() => {
+    auth.setAuthContext();
+  });
+
   async function handleLogin() {
     try {
       const user = { userid: username, password: password };
       const response = await axios.post(
-        "https://localhost:8000/account/login",
+        "https://localhost:8000/request/account/login",
         user
       );
       if (response.status === 200) auth.onLogin(response.data);
@@ -19,6 +23,18 @@ export const Home = () => {
       return response;
     } catch (error) {
       if (error.response.status === 401) alert("Invalid credentials");
+      return false;
+    }
+  }
+
+  async function handleOauth() {
+    try {
+      const response = await axios.post("https://localhost:8000/request");
+      if (response.status === 200) window.location.href = response.data;
+
+      return response;
+    } catch (error) {
+      if (error.response.status === 401) alert("Oauth error");
       return false;
     }
   }
@@ -49,6 +65,11 @@ export const Home = () => {
       <div>
         <button type="button" onClick={handleLogin}>
           Sign In
+        </button>
+      </div>
+      <div>
+        <button type="button" onClick={handleOauth}>
+          Sign in with Google
         </button>
       </div>
     </>

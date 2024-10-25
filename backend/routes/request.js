@@ -1,9 +1,7 @@
 import express from "express";
-import cors from "cors";
 import dotenv from "dotenv";
-import https from "https";
-import fs from "fs";
 import esapi from "node-esapi";
+import { OAuth2Client } from "google-auth-library";
 import {
   generateAccessToken,
   authenticateToken,
@@ -12,38 +10,35 @@ import {
   validatePassword,
   addUser,
   getUsers,
-} from "./models/user-services.js";
+} from "../models/user-services.js";
+
+const router = express.Router();
 
 dotenv.config({ path: "./config.env" });
 
-const app = express();
+// oauth
+router.post("/", async function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://localhost:3000");
+  res.header("Referrer-Policy", "no-referrer-when-downgrade");
 
-const port = process.env.PORT;
+  const redirectUrl = "https://localhost:8000/oauth";
+  const oAuth2Client = new OAuth2Client(
+    process.env.CLIENT_ID,
+    process.env.CLIENT_SECRET,
+    redirectUrl
+  );
 
-app.use(express.json());
-app.use(cors());
-app.disable("x-powered-by");
-
-https
-  .createServer(
-    {
-      key: fs.readFileSync("./keys/key.pem"),
-      cert: fs.readFileSync("./keys/cert.pem"),
-    },
-    app
-  )
-  .listen(port, () => {
-    console.log(`App listening at https://localhost:${port}`);
+  const authorizeUrl = oAuth2Client.generateAuthUrl({
+    access_type: "offline",
+    scope: "https://www.googleapis.com/auth/userinfo.profile openid",
+    prompt: "consent",
   });
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
+  res.json(authorizeUrl);
 });
 
-/*********************************   APIs   **********************************/
-
 // authenticate user
-app.post("/account/login", async (req, res) => {
+router.post("/account/login", async (req, res) => {
   const userToCheck = req.body;
   const auth = await authenticateUser(userToCheck.userid, userToCheck.password);
 
@@ -56,7 +51,7 @@ app.post("/account/login", async (req, res) => {
 });
 
 // create a new user
-app.post("/account/registration", async (req, res) => {
+router.post("/account/registration", async (req, res) => {
   const userToAdd = req.body;
   const matchingUser = await getUserByName(userToAdd.userid);
 
@@ -77,7 +72,7 @@ app.post("/account/registration", async (req, res) => {
 });
 
 // get all users
-app.get("/users", authenticateToken, async (req, res) => {
+router.get("/users", authenticateToken, async (req, res) => {
   const users = await getUsers();
 
   if (users) {
@@ -86,3 +81,5 @@ app.get("/users", authenticateToken, async (req, res) => {
     res.status(401).send("Invalid credentials");
   }
 });
+
+export default router;

@@ -15,7 +15,6 @@ backend/
 ├── models/
 ├── routes/
 ├── backend.js
-├── config.env
 ├── package.json
 ├── sbom.json
 
@@ -23,11 +22,6 @@ frontend/
 ├── cert/
 ├── public/
 ├── src/
-│   ├── App.js
-│   ├── index.js
-│   ├── pages/
-│       ├── Home.js
-│       └── Landing.js
 ├── package.json
 ├── sbom.json
 ```
